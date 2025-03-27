@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['three', '@react-three/fiber', '@react-three/drei', 'framer-motion-3d'],
+  transpilePackages: ['three', '@react-three/fiber', '@react-three/drei'],
   output: 'standalone',
   images: {
     unoptimized: true
@@ -18,7 +18,7 @@ const nextConfig = {
       },
     })
     return config
-  },
+  }
 }
 
 module.exports = nextConfig 
