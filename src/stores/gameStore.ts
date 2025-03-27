@@ -89,7 +89,7 @@ const levels: Level[] = [
   }
 ]
 
-export const useStore = create<GameState>((set, get) => ({
+export const useStore = create<GameState>((set: any, get: any) => ({
   currentLevel: 1,
   levels,
   screws: levels[0].screws,
@@ -100,12 +100,12 @@ export const useStore = create<GameState>((set, get) => ({
   score: 0,
   highScores: {},
 
-  setSelectedPiece: (piece) => set({ selectedPiece: piece }),
+  setSelectedPiece: (piece: Screw | null) => set({ selectedPiece: piece }),
 
-  unscrewScrew: (id) =>
-    set((state) => {
+  unscrewScrew: (id: string) =>
+    set((state: GameState) => {
       return {
-        screws: state.screws.map((screw) =>
+        screws: state.screws.map((screw: Screw) =>
           screw.id === id
             ? { ...screw, isUnscrewed: true }
             : screw
@@ -113,9 +113,9 @@ export const useStore = create<GameState>((set, get) => ({
       }
     }),
 
-  updateScrewProgress: (id, progress) =>
-    set((state) => ({
-      screws: state.screws.map((screw) =>
+  updateScrewProgress: (id: string, progress: number) =>
+    set((state: GameState) => ({
+      screws: state.screws.map((screw: Screw) =>
         screw.id === id
           ? { ...screw, screwProgress: progress }
           : screw
@@ -123,9 +123,9 @@ export const useStore = create<GameState>((set, get) => ({
       screwProgress: progress
     })),
 
-  matchScrew: (holderId) =>
-    set((state) => {
-      const holder = state.screwHolders.find(h => h.id === holderId)
+  matchScrew: (holderId: string) =>
+    set((state: GameState) => {
+      const holder = state.screwHolders.find((h: ScrewHolder) => h.id === holderId)
       if (!holder) return state
 
       const selectedPiece = state.selectedPiece
@@ -134,23 +134,23 @@ export const useStore = create<GameState>((set, get) => ({
       const isMatch = holder.type === selectedPiece.type && holder.color === selectedPiece.color
 
       return {
-        screwHolders: state.screwHolders.map(h =>
+        screwHolders: state.screwHolders.map((h: ScrewHolder) =>
           h.id === holderId
             ? { ...h, matched: isMatch }
             : h
         ),
-        screws: state.screws.map(s =>
+        screws: state.screws.map((s: Screw) =>
           s.id === selectedPiece.id
             ? { ...s, isUnscrewed: false }
             : s
         ),
         selectedPiece: null,
-        isLevelComplete: isMatch && state.screwHolders.every(h => h.matched || h.id === holderId)
+        isLevelComplete: isMatch && state.screwHolders.every((h: ScrewHolder) => h.matched || h.id === holderId)
       }
     }),
 
-  loadLevel: (levelId) => {
-    const level = levels.find(l => l.id === levelId)
+  loadLevel: (levelId: number) => {
+    const level = levels.find((l: Level) => l.id === levelId)
     if (level) {
       set({
         currentLevel: levelId,
@@ -166,7 +166,7 @@ export const useStore = create<GameState>((set, get) => ({
   nextLevel: () => {
     const { currentLevel } = get()
     const nextLevelId = currentLevel + 1
-    const level = levels.find(l => l.id === nextLevelId)
+    const level = levels.find((l: Level) => l.id === nextLevelId)
     if (level) {
       set({
         currentLevel: nextLevelId,
@@ -181,7 +181,7 @@ export const useStore = create<GameState>((set, get) => ({
 
   resetLevel: () => {
     const { currentLevel } = get()
-    const level = levels.find(l => l.id === currentLevel)
+    const level = levels.find((l: Level) => l.id === currentLevel)
     if (level) {
       set({
         screws: level.screws,
@@ -195,9 +195,9 @@ export const useStore = create<GameState>((set, get) => ({
 
   calculateScore: () => {
     const { currentLevel, levels } = get()
-    const level = levels.find(l => l.id === currentLevel)
+    const level = levels.find((l: Level) => l.id === currentLevel)
     if (level) {
-      set(state => ({
+      set((state: GameState) => ({
         score: state.score + level.maxScore,
         highScores: {
           ...state.highScores,
