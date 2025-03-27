@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "buildCommand": "npm run vercel-build",
+  "buildCommand": "npm run build",
   "installCommand": "npm install",
-  "framework": "nextjs",
+  "framework": "react",
   "regions": ["sfo1"],
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/"
+      "destination": "/index.html"
     }
   ],
   "headers": [
@@ -20,11 +20,7 @@
         },
         {
           "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
+          "value": "ALLOW-FROM https://ben-buildscalex.vercel.app"
         }
       ]
     }
