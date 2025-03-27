@@ -6,7 +6,12 @@ import { ScrewHolder } from './ScrewHolder'
 import { UI } from './UI'
 import { useStore } from '../stores/gameStore'
 
-export function Game() {
+interface GameProps {
+  className?: string
+  style?: React.CSSProperties
+}
+
+export function Game({ className = '', style = {} }: GameProps) {
   const { 
     screws, 
     screwHolders,
@@ -16,7 +21,7 @@ export function Game() {
   } = useStore()
 
   return (
-    <div className="w-full h-screen">
+    <div className={`relative w-full h-full ${className}`} style={style}>
       <Canvas>
         <PerspectiveCamera makeDefault position={[0, 0, 5]} />
         <OrbitControls />
@@ -24,7 +29,7 @@ export function Game() {
         <pointLight position={[10, 10, 10]} />
         
         {/* Screw holders */}
-        {screwHolders.map((holder, index) => (
+        {screwHolders.map((holder) => (
           <ScrewHolder
             key={holder.id}
             holder={holder}
