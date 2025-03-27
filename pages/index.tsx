@@ -1,5 +1,14 @@
 import React from 'react'
-import { Game } from '../src/components/Game'
+import dynamic from 'next/dynamic'
+
+const Game = dynamic(() => import('../src/components/Game'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[600px] flex items-center justify-center bg-gray-100">
+      <div className="text-xl">Loading game...</div>
+    </div>
+  )
+})
 
 export default function Home() {
   return (
