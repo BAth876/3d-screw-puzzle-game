@@ -1,27 +1,21 @@
 import { create } from 'zustand'
 import { soundManager } from '../utils/soundManager'
 
-export type ScrewType = 'phillips' | 'flathead' | 'allen'
-export type ScrewColor = 'red' | 'blue' | 'green' | 'yellow'
-
 export interface Screw {
-  id: number
-  type: ScrewType
-  color: ScrewColor
-  isUnscrewed: boolean
-  screwProgress: number
+  id: string
+  type: 'phillips' | 'flathead' | 'allen'
+  color: 'red' | 'blue' | 'green' | 'yellow'
   position: [number, number, number]
   rotation: [number, number, number]
+  isUnscrewed: boolean
+  screwProgress: number
 }
 
 export interface ScrewHolder {
-  id: number
-  position: [number, number, number]
-  requiredScrews: {
-    type: ScrewType
-    color: ScrewColor
-  }[]
-  matchedScrews: number[]
+  id: string
+  type: 'phillips' | 'flathead' | 'allen'
+  color: 'red' | 'blue' | 'green' | 'yellow'
+  matched: boolean
 }
 
 export interface Level {
@@ -38,13 +32,15 @@ interface GameState {
   levels: Level[]
   screws: Screw[]
   screwHolders: ScrewHolder[]
-  selectedScrew: number | null
+  selectedPiece: Screw | null
+  screwProgress: number
+  isLevelComplete: boolean
   score: number
   highScores: { [key: number]: number }
-  setSelectedScrew: (index: number | null) => void
-  unscrewScrew: (index: number) => void
-  updateScrewProgress: (index: number, progress: number) => void
-  matchScrew: (screwId: number, holderId: number) => void
+  setSelectedPiece: (piece: Screw | null) => void
+  unscrewScrew: (index: string) => void
+  updateScrewProgress: (index: string, progress: number) => void
+  matchScrew: (holderId: string) => void
   loadLevel: (levelId: number) => void
   nextLevel: () => void
   resetLevel: () => void
@@ -60,21 +56,14 @@ const levels: Level[] = [
     description: "Learn the basics of unscrewing and matching screws",
     maxScore: 1000,
     screws: [
-      { id: 0, type: 'phillips', color: 'red', isUnscrewed: false, screwProgress: 0, position: [-1, 0, 0], rotation: [0, 0, 0] },
-      { id: 1, type: 'flathead', color: 'blue', isUnscrewed: false, screwProgress: 0, position: [1, 0, 0], rotation: [0, 0, 0] },
-      { id: 2, type: 'allen', color: 'green', isUnscrewed: false, screwProgress: 0, position: [0, 0, 0], rotation: [0, 0, 0] }
+      { id: '0', type: 'phillips', color: 'red', position: [-1, 0, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '1', type: 'flathead', color: 'blue', position: [1, 0, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '2', type: 'allen', color: 'green', position: [0, 0, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 }
     ],
     screwHolders: [
-      {
-        id: 0,
-        position: [-2, 2, 0],
-        requiredScrews: [
-          { type: 'phillips', color: 'red' },
-          { type: 'flathead', color: 'blue' },
-          { type: 'allen', color: 'green' }
-        ],
-        matchedScrews: []
-      }
+      { id: '0', type: 'phillips', color: 'red', matched: false },
+      { id: '1', type: 'flathead', color: 'blue', matched: false },
+      { id: '2', type: 'allen', color: 'green', matched: false }
     ]
   },
   {
