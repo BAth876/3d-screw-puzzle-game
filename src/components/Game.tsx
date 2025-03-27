@@ -5,8 +5,9 @@ import { PuzzlePiece } from './PuzzlePiece'
 import { ScrewHolder } from './ScrewHolder'
 import { UI } from './UI'
 import { useStore } from '../stores/gameStore'
+import type { Screw, ScrewHolder as ScrewHolderType } from '../stores/gameStore'
 
-interface GameProps {
+export interface GameProps {
   className?: string
   style?: React.CSSProperties
 }
@@ -29,7 +30,7 @@ export function Game({ className = '', style = {} }: GameProps) {
         <pointLight position={[10, 10, 10]} />
         
         {/* Screw holders */}
-        {screwHolders.map((holder) => (
+        {screwHolders.map((holder: ScrewHolderType) => (
           <ScrewHolder
             key={holder.id}
             holder={holder}
@@ -37,7 +38,7 @@ export function Game({ className = '', style = {} }: GameProps) {
         ))}
         
         {/* Puzzle pieces */}
-        {screws.map((piece) => (
+        {screws.map((piece: Screw) => (
           <PuzzlePiece
             key={piece.id}
             piece={piece}
