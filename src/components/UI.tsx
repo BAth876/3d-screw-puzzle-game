@@ -1,6 +1,7 @@
 import React from 'react'
 import { useStore } from '../stores/gameStore'
 import { soundManager } from '../utils/soundManager'
+import type { Level, Screw, ScrewHolder } from '../stores/gameStore'
 
 export function UI() {
   const { 
@@ -21,7 +22,7 @@ export function UI() {
   const unscrewedCount = screws.filter((s: Screw) => s.isUnscrewed).length
   const totalScrews = screws.length
   
-  const matchedHolders = screwHolders.filter(h => h.matched).length
+  const matchedHolders = screwHolders.filter((h: ScrewHolder) => h.matched).length
   const totalHolders = screwHolders.length
 
   // Calculate score when all holders are matched
