@@ -18,9 +18,6 @@ const nextConfig = {
       },
     });
     return config;
-  },
-  experimental: {
-    appDir: false
   }
 };
 
