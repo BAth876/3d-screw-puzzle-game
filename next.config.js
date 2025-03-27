@@ -16,9 +16,9 @@ const nextConfig = {
           outputPath: 'static/',
         },
       },
-    })
-    return config
+    });
+    return config;
   }
-}
+};
 
-module.exports = nextConfig 
+module.exports = nextConfig; 
