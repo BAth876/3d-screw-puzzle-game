@@ -34,5 +34,6 @@
       "src": "package.json",
       "use": "@vercel/next"
     }
-  ]
+  ],
+  "outputDirectory": ".next"
 } 
