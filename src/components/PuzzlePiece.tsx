@@ -7,6 +7,7 @@ interface PuzzlePieceProps {
   piece: Screw
   isSelected: boolean
   onSelect: () => void
+  onProgress: (progress: number) => void
 }
 
 const screwColors: Record<string, string> = {
@@ -39,7 +40,7 @@ const createScrewTypeTexture = (type: string, color: string) => {
   return new THREE.CanvasTexture(canvas)
 }
 
-export function PuzzlePiece({ piece, isSelected, onSelect }: PuzzlePieceProps) {
+export function PuzzlePiece({ piece, isSelected, onSelect, onProgress }: PuzzlePieceProps) {
   const meshRef = useRef<THREE.Mesh>(null)
   const rotationRef = useRef(0)
   const textureRef = useRef<THREE.CanvasTexture | null>(null)
