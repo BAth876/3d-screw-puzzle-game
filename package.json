@@ -2,28 +2,26 @@
   "name": "@bath876/3d-screw-puzzle-game",
   "version": "1.0.0",
   "description": "A 3D screw puzzle game component",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc && cp -r public dist/ && cp index.html dist/",
-    "prepare": "npm run build"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@react-three/drei": "^9.99.0",
     "@react-three/fiber": "^8.15.16",
+    "next": "14.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.161.0",
     "zustand": "^4.5.1"
   },
   "devDependencies": {
+    "@types/node": "^20.11.19",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "@types/three": "^0.161.2",
     "typescript": "^5.3.3"
-  },
-  "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
   }
 } 
