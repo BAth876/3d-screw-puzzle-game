@@ -3,7 +3,6 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   transpilePackages: ['three', '@react-three/fiber', '@react-three/drei'],
-  output: 'export',
   images: {
     unoptimized: true
   },
