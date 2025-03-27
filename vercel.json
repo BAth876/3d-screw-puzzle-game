@@ -24,14 +24,5 @@
         }
       ]
     }
-  ],
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build"
-    }
-  ],
-  "outputDirectory": "dist",
-  "public": true,
-  "cleanUrls": true
+  ]
 } 
