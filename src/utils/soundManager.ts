@@ -4,17 +4,20 @@ class SoundManager {
   private isMuted: boolean = false
 
   private constructor() {
-    // Initialize sounds
-    this.sounds = {
-      unscrew: new Audio('/sounds/unscrew.mp3'),
-      match: new Audio('/sounds/match.mp3'),
-      levelComplete: new Audio('/sounds/level-complete.mp3')
-    }
+    // Only initialize sounds on the client side
+    if (typeof window !== 'undefined') {
+      // Initialize sounds
+      this.sounds = {
+        unscrew: new Audio('/sounds/unscrew.mp3'),
+        match: new Audio('/sounds/match.mp3'),
+        levelComplete: new Audio('/sounds/level-complete.mp3')
+      }
 
-    // Set volume and other properties
-    Object.values(this.sounds).forEach(sound => {
-      sound.volume = 0.3
-    })
+      // Set volume and other properties
+      Object.values(this.sounds).forEach(sound => {
+        sound.volume = 0.3
+      })
+    }
   }
 
   public static getInstance(): SoundManager {
@@ -25,7 +28,7 @@ class SoundManager {
   }
 
   public play(soundName: keyof typeof this.sounds): void {
-    if (this.isMuted) return
+    if (this.isMuted || typeof window === 'undefined') return
     const sound = this.sounds[soundName]
     if (sound) {
       sound.currentTime = 0
@@ -42,4 +45,5 @@ class SoundManager {
   }
 }
 
-export const soundManager = SoundManager.getInstance() 
+// Only create the instance on the client side
+export const soundManager = typeof window !== 'undefined' ? SoundManager.getInstance() : null 

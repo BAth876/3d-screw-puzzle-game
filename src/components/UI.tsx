@@ -1,6 +1,5 @@
 import React from 'react'
 import { useStore } from '../stores/gameStore'
-import { soundManager } from '../utils/soundManager'
 import type { Level, Screw, ScrewHolder } from '../stores/gameStore'
 
 export function UI() {
