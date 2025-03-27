@@ -38,16 +38,14 @@ interface GameState {
   score: number
   highScores: { [key: number]: number }
   setSelectedPiece: (piece: Screw | null) => void
-  unscrewScrew: (index: string) => void
-  updateScrewProgress: (index: string, progress: number) => void
+  unscrewScrew: (id: string) => void
+  updateScrewProgress: (id: string, progress: number) => void
   matchScrew: (holderId: string) => void
   loadLevel: (levelId: number) => void
   nextLevel: () => void
   resetLevel: () => void
   calculateScore: () => void
 }
-
-type GameStore = GameState
 
 const levels: Level[] = [
   {
@@ -72,34 +70,20 @@ const levels: Level[] = [
     description: "Match screws by color to their holders",
     maxScore: 2000,
     screws: [
-      { id: 0, type: 'phillips', color: 'red', isUnscrewed: false, screwProgress: 0, position: [-1, 0, 0], rotation: [0, 0, 0] },
-      { id: 1, type: 'flathead', color: 'red', isUnscrewed: false, screwProgress: 0, position: [1, 0, 0], rotation: [0, 0, 0] },
-      { id: 2, type: 'allen', color: 'red', isUnscrewed: false, screwProgress: 0, position: [0, 0, 0], rotation: [0, 0, 0] },
-      { id: 3, type: 'phillips', color: 'blue', isUnscrewed: false, screwProgress: 0, position: [-1, 1, 0], rotation: [0, 0, 0] },
-      { id: 4, type: 'flathead', color: 'blue', isUnscrewed: false, screwProgress: 0, position: [1, 1, 0], rotation: [0, 0, 0] },
-      { id: 5, type: 'allen', color: 'blue', isUnscrewed: false, screwProgress: 0, position: [0, 1, 0], rotation: [0, 0, 0] }
+      { id: '0', type: 'phillips', color: 'red', position: [-1, 0, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '1', type: 'flathead', color: 'red', position: [1, 0, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '2', type: 'allen', color: 'red', position: [0, 0, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '3', type: 'phillips', color: 'blue', position: [-1, 1, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '4', type: 'flathead', color: 'blue', position: [1, 1, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '5', type: 'allen', color: 'blue', position: [0, 1, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 }
     ],
     screwHolders: [
-      {
-        id: 0,
-        position: [-2, 2, 0],
-        requiredScrews: [
-          { type: 'phillips', color: 'red' },
-          { type: 'flathead', color: 'red' },
-          { type: 'allen', color: 'red' }
-        ],
-        matchedScrews: []
-      },
-      {
-        id: 1,
-        position: [2, 2, 0],
-        requiredScrews: [
-          { type: 'phillips', color: 'blue' },
-          { type: 'flathead', color: 'blue' },
-          { type: 'allen', color: 'blue' }
-        ],
-        matchedScrews: []
-      }
+      { id: '0', type: 'phillips', color: 'red', matched: false },
+      { id: '1', type: 'flathead', color: 'red', matched: false },
+      { id: '2', type: 'allen', color: 'red', matched: false },
+      { id: '3', type: 'phillips', color: 'blue', matched: false },
+      { id: '4', type: 'flathead', color: 'blue', matched: false },
+      { id: '5', type: 'allen', color: 'blue', matched: false }
     ]
   },
   {
@@ -108,34 +92,20 @@ const levels: Level[] = [
     description: "Match screws by type to their holders",
     maxScore: 3000,
     screws: [
-      { id: 0, type: 'phillips', color: 'red', isUnscrewed: false, screwProgress: 0, position: [-1, 0, 0], rotation: [0, 0, 0] },
-      { id: 1, type: 'phillips', color: 'blue', isUnscrewed: false, screwProgress: 0, position: [1, 0, 0], rotation: [0, 0, 0] },
-      { id: 2, type: 'phillips', color: 'green', isUnscrewed: false, screwProgress: 0, position: [0, 0, 0], rotation: [0, 0, 0] },
-      { id: 3, type: 'flathead', color: 'red', isUnscrewed: false, screwProgress: 0, position: [-1, 1, 0], rotation: [0, 0, 0] },
-      { id: 4, type: 'flathead', color: 'blue', isUnscrewed: false, screwProgress: 0, position: [1, 1, 0], rotation: [0, 0, 0] },
-      { id: 5, type: 'flathead', color: 'green', isUnscrewed: false, screwProgress: 0, position: [0, 1, 0], rotation: [0, 0, 0] }
+      { id: '0', type: 'phillips', color: 'red', position: [-1, 0, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '1', type: 'phillips', color: 'blue', position: [1, 0, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '2', type: 'phillips', color: 'green', position: [0, 0, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '3', type: 'flathead', color: 'red', position: [-1, 1, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '4', type: 'flathead', color: 'blue', position: [1, 1, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '5', type: 'flathead', color: 'green', position: [0, 1, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 }
     ],
     screwHolders: [
-      {
-        id: 0,
-        position: [-2, 2, 0],
-        requiredScrews: [
-          { type: 'phillips', color: 'red' },
-          { type: 'phillips', color: 'blue' },
-          { type: 'phillips', color: 'green' }
-        ],
-        matchedScrews: []
-      },
-      {
-        id: 1,
-        position: [2, 2, 0],
-        requiredScrews: [
-          { type: 'flathead', color: 'red' },
-          { type: 'flathead', color: 'blue' },
-          { type: 'flathead', color: 'green' }
-        ],
-        matchedScrews: []
-      }
+      { id: '0', type: 'phillips', color: 'red', matched: false },
+      { id: '1', type: 'phillips', color: 'blue', matched: false },
+      { id: '2', type: 'phillips', color: 'green', matched: false },
+      { id: '3', type: 'flathead', color: 'red', matched: false },
+      { id: '4', type: 'flathead', color: 'blue', matched: false },
+      { id: '5', type: 'flathead', color: 'green', matched: false }
     ]
   },
   {
@@ -144,111 +114,93 @@ const levels: Level[] = [
     description: "Match both color and type in a complex pattern",
     maxScore: 4000,
     screws: [
-      { id: 0, type: 'phillips', color: 'red', isUnscrewed: false, screwProgress: 0, position: [-1, 0, 0], rotation: [0, 0, 0] },
-      { id: 1, type: 'flathead', color: 'blue', isUnscrewed: false, screwProgress: 0, position: [1, 0, 0], rotation: [0, 0, 0] },
-      { id: 2, type: 'allen', color: 'green', isUnscrewed: false, screwProgress: 0, position: [0, 0, 0], rotation: [0, 0, 0] },
-      { id: 3, type: 'phillips', color: 'yellow', isUnscrewed: false, screwProgress: 0, position: [-1, 1, 0], rotation: [0, 0, 0] },
-      { id: 4, type: 'flathead', color: 'red', isUnscrewed: false, screwProgress: 0, position: [1, 1, 0], rotation: [0, 0, 0] },
-      { id: 5, type: 'allen', color: 'blue', isUnscrewed: false, screwProgress: 0, position: [0, 1, 0], rotation: [0, 0, 0] }
+      { id: '0', type: 'phillips', color: 'red', position: [-1, 0, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '1', type: 'flathead', color: 'blue', position: [1, 0, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '2', type: 'allen', color: 'green', position: [0, 0, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '3', type: 'phillips', color: 'yellow', position: [-1, 1, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '4', type: 'flathead', color: 'red', position: [1, 1, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 },
+      { id: '5', type: 'allen', color: 'blue', position: [0, 1, 0], rotation: [0, 0, 0], isUnscrewed: false, screwProgress: 0 }
     ],
     screwHolders: [
-      {
-        id: 0,
-        position: [-2, 2, 0],
-        requiredScrews: [
-          { type: 'phillips', color: 'red' },
-          { type: 'flathead', color: 'blue' },
-          { type: 'allen', color: 'green' }
-        ],
-        matchedScrews: []
-      },
-      {
-        id: 1,
-        position: [2, 2, 0],
-        requiredScrews: [
-          { type: 'phillips', color: 'yellow' },
-          { type: 'flathead', color: 'red' },
-          { type: 'allen', color: 'blue' }
-        ],
-        matchedScrews: []
-      }
+      { id: '0', type: 'phillips', color: 'red', matched: false },
+      { id: '1', type: 'flathead', color: 'blue', matched: false },
+      { id: '2', type: 'allen', color: 'green', matched: false },
+      { id: '3', type: 'phillips', color: 'yellow', matched: false },
+      { id: '4', type: 'flathead', color: 'red', matched: false },
+      { id: '5', type: 'allen', color: 'blue', matched: false }
     ]
   }
 ]
 
-export const useGameStore = create<GameStore>((set) => ({
+export const useStore = create<GameState>((set) => ({
   currentLevel: 1,
   levels,
   screws: levels[0].screws,
   screwHolders: levels[0].screwHolders,
-  selectedScrew: null,
+  selectedPiece: null,
+  screwProgress: 0,
+  isLevelComplete: false,
   score: 0,
   highScores: {},
   
-  setSelectedScrew: (index: number | null) => set({ selectedScrew: index }),
+  setSelectedPiece: (piece) => set({ selectedPiece: piece }),
   
-  unscrewScrew: (index: number) => 
-    set((state: GameState) => {
+  unscrewScrew: (id) => 
+    set((state) => {
       soundManager.play('unscrew')
       return {
-        screws: state.screws.map((screw: Screw, i: number) => 
-          i === index 
+        screws: state.screws.map((screw) => 
+          screw.id === id 
             ? { ...screw, isUnscrewed: true, screwProgress: 1 }
             : screw
         )
       }
     }),
     
-  updateScrewProgress: (index: number, progress: number) =>
-    set((state: GameState) => ({
-      screws: state.screws.map((screw: Screw, i: number) =>
-        i === index
+  updateScrewProgress: (id, progress) =>
+    set((state) => ({
+      screws: state.screws.map((screw) =>
+        screw.id === id
           ? { ...screw, screwProgress: progress }
           : screw
       )
     })),
     
-  matchScrew: (screwId: number, holderId: number) =>
-    set((state: GameState) => {
-      const screw = state.screws.find((s: Screw) => s.id === screwId)
-      const holder = state.screwHolders.find((h: ScrewHolder) => h.id === holderId)
-      
-      if (!screw || !holder) return state
-      
-      const requiredScrew = holder.requiredScrews.find(
-        (req: { type: ScrewType; color: ScrewColor }) => 
-          req.type === screw.type && req.color === screw.color
-      )
-      
-      if (!requiredScrew) return state
+  matchScrew: (holderId) =>
+    set((state) => {
+      const holder = state.screwHolders.find((h) => h.id === holderId)
+      if (!holder) return state
       
       soundManager.play('match')
       return {
-        screwHolders: state.screwHolders.map((h: ScrewHolder) =>
+        screwHolders: state.screwHolders.map((h) =>
           h.id === holderId
-            ? { ...h, matchedScrews: [...h.matchedScrews, screwId] }
+            ? { ...h, matched: true }
             : h
-        )
+        ),
+        isLevelComplete: state.screwHolders.every(h => h.matched)
       }
     }),
     
-  loadLevel: (levelId: number) =>
-    set((state: GameState) => {
-      const level = state.levels.find((l: Level) => l.id === levelId)
+  loadLevel: (levelId) =>
+    set((state) => {
+      const level = state.levels.find((l) => l.id === levelId)
       if (!level) return state
       
       return {
         currentLevel: levelId,
         screws: level.screws,
         screwHolders: level.screwHolders,
-        selectedScrew: null,
+        selectedPiece: null,
+        screwProgress: 0,
+        isLevelComplete: false,
         score: 0
       }
     }),
     
   nextLevel: () =>
-    set((state: GameState) => {
-      const nextLevel = state.levels.find((l: Level) => l.id === state.currentLevel + 1)
+    set((state) => {
+      const nextLevel = state.levels.find((l) => l.id === state.currentLevel + 1)
       if (!nextLevel) return state
       
       soundManager.play('levelComplete')
@@ -256,32 +208,34 @@ export const useGameStore = create<GameStore>((set) => ({
         currentLevel: nextLevel.id,
         screws: nextLevel.screws,
         screwHolders: nextLevel.screwHolders,
-        selectedScrew: null,
+        selectedPiece: null,
+        screwProgress: 0,
+        isLevelComplete: false,
         score: 0
       }
     }),
     
   resetLevel: () =>
-    set((state: GameState) => {
-      const currentLevel = state.levels.find((l: Level) => l.id === state.currentLevel)
+    set((state) => {
+      const currentLevel = state.levels.find((l) => l.id === state.currentLevel)
       if (!currentLevel) return state
       
       return {
         screws: currentLevel.screws,
         screwHolders: currentLevel.screwHolders,
-        selectedScrew: null,
+        selectedPiece: null,
+        screwProgress: 0,
+        isLevelComplete: false,
         score: 0
       }
     }),
 
   calculateScore: () =>
-    set((state: GameState) => {
-      const currentLevel = state.levels.find((l: Level) => l.id === state.currentLevel)
+    set((state) => {
+      const currentLevel = state.levels.find((l) => l.id === state.currentLevel)
       if (!currentLevel) return state
 
-      const matchedHolders = state.screwHolders.filter(
-        (h: ScrewHolder) => h.matchedScrews.length === h.requiredScrews.length
-      ).length
+      const matchedHolders = state.screwHolders.filter((h) => h.matched).length
       const totalHolders = state.screwHolders.length
 
       if (matchedHolders === totalHolders) {
