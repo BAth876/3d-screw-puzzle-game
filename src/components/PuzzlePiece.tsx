@@ -1,6 +1,7 @@
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Screw } from '../stores/gameStore'
+import * as THREE from 'three'
 
 interface PuzzlePieceProps {
   piece: Screw
@@ -15,9 +16,42 @@ const screwColors: Record<string, string> = {
   yellow: '#ffff00'
 }
 
+const createScrewTypeTexture = (type: string, color: string) => {
+  const canvas = document.createElement('canvas')
+  canvas.width = 64
+  canvas.height = 64
+  const ctx = canvas.getContext('2d')
+  
+  if (ctx) {
+    ctx.fillStyle = color
+    ctx.fillRect(0, 0, 64, 64)
+    ctx.fillStyle = 'white'
+    ctx.font = '24px Arial'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(
+      type === 'phillips' ? '✕' : type === 'flathead' ? '—' : '⬡',
+      32,
+      32
+    )
+  }
+  
+  return new THREE.CanvasTexture(canvas)
+}
+
 export function PuzzlePiece({ piece, isSelected, onSelect }: PuzzlePieceProps) {
   const meshRef = useRef<THREE.Mesh>(null)
   const rotationRef = useRef(0)
+  const textureRef = useRef<THREE.CanvasTexture | null>(null)
+  
+  useEffect(() => {
+    textureRef.current = createScrewTypeTexture(piece.type, screwColors[piece.color])
+    return () => {
+      if (textureRef.current) {
+        textureRef.current.dispose()
+      }
+    }
+  }, [piece.type, piece.color])
   
   useFrame((state, delta) => {
     if (isSelected && piece.screwProgress > 0) {
@@ -60,22 +94,10 @@ export function PuzzlePiece({ piece, isSelected, onSelect }: PuzzlePieceProps) {
       {/* Screw type indicator */}
       <mesh position={[0, 0.35, 0]}>
         <planeGeometry args={[0.4, 0.4]} />
-        <meshBasicMaterial color={screwColors[piece.color]}>
-          <canvasTexture attach="map" args={[64, 64]}>
-            <canvas>
-              <text
-                x="32"
-                y="32"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill="white"
-                fontSize="24"
-              >
-                {piece.type === 'phillips' ? '✕' : piece.type === 'flathead' ? '—' : '⬡'}
-              </text>
-            </canvas>
-          </canvasTexture>
-        </meshBasicMaterial>
+        <meshBasicMaterial 
+          map={textureRef.current}
+          transparent
+        />
       </mesh>
     </group>
   )
