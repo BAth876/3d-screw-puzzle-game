@@ -28,8 +28,8 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/next"
+      "use": "@vercel/static-build"
     }
   ],
-  "outputDirectory": ".next"
+  "outputDirectory": "dist"
 } 
