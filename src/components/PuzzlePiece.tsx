@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { motion } from 'framer-motion-3d'
 import { Screw } from '../stores/gameStore'
 
 interface PuzzlePieceProps {
@@ -30,19 +29,15 @@ export function PuzzlePiece({ piece, isSelected, onSelect }: PuzzlePieceProps) {
   })
 
   return (
-    <motion.group
+    <group
       position={piece.position}
       rotation={piece.rotation}
-      animate={{
-        scale: isSelected ? 1.2 : 1,
-        y: isSelected ? 0.2 : 0
-      }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      scale={isSelected ? 1.2 : 1}
+      onClick={onSelect}
+      onPointerDown={onSelect}
     >
       <mesh
         ref={meshRef}
-        onClick={onSelect}
-        onPointerDown={onSelect}
       >
         <cylinderGeometry args={[0.2, 0.2, 0.5, 32]} />
         <meshStandardMaterial 
@@ -82,6 +77,6 @@ export function PuzzlePiece({ piece, isSelected, onSelect }: PuzzlePieceProps) {
           </canvasTexture>
         </meshBasicMaterial>
       </mesh>
-    </motion.group>
+    </group>
   )
 } 
